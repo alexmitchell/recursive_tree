@@ -1,23 +1,38 @@
-from kxg import vecrec.Vector
+#!/usr/bin/env python3
+
+import pyglet
+
+from vecrec import Vector
 from math import pi
 from branch import Branch
+        
+# Create the tree
+max_depth = 10
+depth = 0
+base_vector = Vector(350, 0)
+branch_vector = Vector(0, 200)
+attenuation = 0.6
+handed = 1
+turn = 3*pi/12
+split = 4*pi/12
 
-class Root:
-    def __init__(self):
-        # Default variables for the root branch.
+Branch.max_depth = max_depth
+root = Branch(
+        depth, base_vector, branch_vector,
+        attenuation, handed, turn, split)
 
-        max_depth = 5
-        base_vector = Vector.null()
-        branch_vector = Vector(0, 1)
-        attenuation = 0.5
-        handed = 1
-        turn = pi/6
-        split = pi/3
+root.generate_tree_recursion()
 
-        self.branch = Branch(
-                self, depth, base_vector, branch_vector,
-                attenuation, handed, turn, split)
-        Branch.max_depth = max_depth
+# Display the tree
+window = pyglet.window.Window()
 
-    def generate_tree():
-        self.branch.generate_tree_recursion()
+def draw_line(coordinates):
+    pyglet.graphics.draw(2, pyglet.gl.GL_LINES, ('v2f', coordinates))
+
+@window.event
+def on_draw():
+    window.clear()
+    root.draw_recursive(draw_line)
+
+pyglet.app.run()
+

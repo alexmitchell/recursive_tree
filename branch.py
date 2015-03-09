@@ -6,7 +6,6 @@ class Branch:
         # The variables are present in the order that they will be 
         # calculated.
 
-
         # Current depth of tree starting at 0.
         # Will be less than Branch.max_depth
         self.depth = depth
@@ -27,7 +26,7 @@ class Branch:
         self.handed_child = None
         self.second_child = None
 
-    def generate_tree_recursion():
+    def generate_tree_recursion(self):
 
         child_depth = self.depth + 1
         if (child_depth < Branch.max_depth):
@@ -55,4 +54,15 @@ class Branch:
             # Recurse.
             self.handed_child.generate_tree_recursion()
             self.second_child.generate_tree_recursion()
+
+    def draw_recursive(self, draw_line):
+        x0, y0 = self.base_vector.get_tuple()
+        x1, y1 = (self.base_vector + self.branch_vector).get_tuple()
+
+        draw_line((x0, y0, x1, y1))
+
+        if self.handed_child is not None:
+            self.handed_child.draw_recursive(draw_line)
+        if self.second_child is not None:
+            self.second_child.draw_recursive(draw_line)
 
