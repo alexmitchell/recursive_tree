@@ -2,19 +2,26 @@ from random import random
 
 class Branch:
     max_depth = 1
+    branch_count = 0
     def __init__(self, depth):
         # Current depth of tree starting at 0.
         # Will be less than Branch.max_depth
+        # Ex: max_depth of 10 means branches will be depth 0 through 9.
+        Branch.branch_count += 1
         self.depth = depth
+        self.procreate()
 
-        # Procreate
-        child_depth = depth + 1
+    def __del__(self):
+        Branch.branch_count -= 1
+
+    def procreate(self):
+        child_depth = self.depth + 1
         self.handed_child = None
         self.second_child = None
         if (child_depth < Branch.max_depth):
-            if random() < 0.98**child_depth:
+            if random() < 0.95**child_depth:
                 self.handed_child = Branch(child_depth)
-            if random() < 0.98**child_depth:
+            if random() < 0.95**child_depth:
                 self.second_child = Branch(child_depth)
 
     def set_branch(self, base_vector, branch_vector, attenuation,
@@ -96,3 +103,24 @@ class Branch:
         # Update the attenuation variable for all downstream branches
         self.branch_vector = branch_vector
         self.update_tree_recursion()
+    
+    def change_depth_recursive(self, old_depth):
+        child_depth = self.depth + 1
+        if child_depth < Branch.max_depth:
+            if self.depth + 1 == old_depth:
+                # Was a leaf node, but is not now. Tree is expanding.
+                self.procreate()
+                self.update_tree_recursion()
+            else:
+                # A normal intermediate branch. Spread the word.
+                if self.handed_child is not None:
+                    self.handed_child.change_depth_recursive(old_depth)
+                if self.second_child is not None:
+                    self.second_child.change_depth_recursive(old_depth)
+        else:
+            # The children branches are no longer allowed. Delete them 
+            # if they exist.
+            
+            self.handed_child = None
+            self.second_child = None
+

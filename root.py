@@ -53,53 +53,97 @@ branch_vector_step = branch_vector/10
 
 @window.event
 def on_key_press(symbol, modifier):
-    global init_turn, init_split, init_attenuation, branch_vector
+    handle_turn_change(symbol)
+    handle_split_change(symbol)
+    handle_attenuation_change(symbol)
+    handle_branch_vector_change(symbol)
+    handle_tree_change(symbol)
+    handle_depth_change(symbol)
 
+def handle_turn_change(symbol):
+    global init_turn
     if symbol == key.UP:
         init_turn += turn_step
-        root.change_turn(init_turn*pi/180)
-        print("Changing turn angle to", init_turn)#*180/pi)
-
     elif symbol == key.DOWN:
         init_turn -= turn_step
-        root.change_turn(init_turn*pi/180)
-        print("Changing turn angle to", init_turn)#*180/pi)
+    else:
+        return
+    print("Changing turn angle to", init_turn, end="... ")#*180/pi)
+    root.change_turn(init_turn*pi/180)
+    print("Done!")
 
-    elif symbol == key.RIGHT:
+def handle_split_change(symbol):
+    global init_split
+    if symbol == key.RIGHT:
         init_split += split_step
-        root.change_split(init_split*pi/180)
-        print("Changing split angle to", init_split)#*180/pi)
-
     elif symbol == key.LEFT:
         init_split -= split_step
-        root.change_split(init_split*pi/180)
-        print("Changing split angle to", init_split)#*180/pi)
+    else:
+        return
+    print("Changing split angle to", init_split, end="... ")#*180/pi)
+    root.change_split(init_split*pi/180)
+    print("Done!")
 
-    elif symbol == key.A:
+def handle_attenuation_change(symbol):
+    global init_attenuation
+    if symbol == key.A:
         init_attenuation += attenuation_step
-        root.change_attenuation(init_attenuation)
-        print("Changing attenuation to", init_attenuation)
-
     elif symbol == key.S:
         init_attenuation -= attenuation_step
-        root.change_attenuation(init_attenuation)
-        print("Changing attenuation to", init_attenuation)
+    else:
+        return
+    print("Changing attenuation to", init_attenuation, end="... ")
+    root.change_attenuation(init_attenuation)
+    print("Done!")
 
-    elif symbol == key.Q:
+def handle_branch_vector_change(symbol):
+    global branch_vector
+    if symbol == key.Q:
         branch_vector += branch_vector_step
-        root.change_branch_vector(branch_vector)
-        print("Changing root branch vector to", branch_vector)
-
     elif symbol == key.W:
         branch_vector -= branch_vector_step
-        root.change_branch_vector(branch_vector)
-        print("Changing root branch vector to", branch_vector)
+    else:
+        return
+    print("Changing root branch vector to", branch_vector, end="... ")
+    root.change_branch_vector(branch_vector)
+    print("Done!")
 
-    elif symbol == key.BACKSPACE:
+def handle_tree_change(symbol):
+    if symbol == key.BACKSPACE:
         global root
         # root.teardown()
+        print("Generating a new tree", end="... ")
         root = generate_tree()
-        print("Generating a new tree")
+        print("Done!")
+        print("   ", Branch.branch_count, " branches created.")
 
+def handle_depth_change(symbol):
+    global max_depth
+    old_depth = max_depth
+    old_count = Branch.branch_count
+    if symbol == key.Z:
+        max_depth += 1
+    elif symbol == key.X:
+        if max_depth > 1:
+            max_depth -= 1
+        else:
+            print("Minimum depth is 1")
+            return
+    else:
+        return
+
+    print("Changing the maximum depth to", max_depth, end="... ")
+    Branch.max_depth = max_depth
+    root.change_depth_recursive(old_depth)
+    print("Done!")
+
+    new_count = Branch.branch_count
+    count_diff = new_count - old_count
+    if count_diff > 0:
+        print("   ", count_diff , " branches created for a new total of ", new_count, " branches.")
+    elif count_diff < 0:
+        print("   ", -count_diff , " branches destroyed for a new total of ", new_count, " branches.")
+    else:
+        print("   No branches created or destroyed for a total of ", new_count, " branches.")
 
 pyglet.app.run()
