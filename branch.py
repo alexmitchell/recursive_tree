@@ -15,6 +15,19 @@ class Branch:
         Branch.branch_count -= 1
 
     def procreate(self):
+        #self.procreate_full()
+        self.procreate_random()
+        #self.procreate_alternating()
+
+    def procreate_full(self):
+        child_depth = self.depth + 1
+        self.handed_child = None
+        self.second_child = None
+        if (child_depth < Branch.max_depth):
+            self.handed_child = Branch(child_depth)
+            self.second_child = Branch(child_depth)
+
+    def procreate_random(self):
         child_depth = self.depth + 1
         self.handed_child = None
         self.second_child = None
@@ -22,6 +35,17 @@ class Branch:
             if random() < 0.95**child_depth:
                 self.handed_child = Branch(child_depth)
             if random() < 0.95**child_depth:
+                self.second_child = Branch(child_depth)
+
+    def procreate_alternating(self):
+        child_depth = self.depth + 1
+        self.handed_child = None
+        self.second_child = None
+        if (child_depth < Branch.max_depth):
+            mod = self.depth % 4
+            if mod in (0,2,3):
+                self.handed_child = Branch(child_depth)
+            if mod in (0,1,2):
                 self.second_child = Branch(child_depth)
 
     def set_branch(self, base_vector, branch_vector, attenuation,

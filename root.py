@@ -140,9 +140,9 @@ def handle_depth_change(symbol):
     new_count = Branch.branch_count
     count_diff = new_count - old_count
     if count_diff > 0:
-        print("   ", count_diff , " branches created for a new total of ", new_count, " branches.")
+        print("   ", count_diff , "branches" if count_diff>1 else "branch", "created for a new total of ", new_count, " branches.")
     elif count_diff < 0:
-        print("   ", -count_diff , " branches destroyed for a new total of ", new_count, " branches.")
+        print("   ", -count_diff , "branches" if -count_diff>1 else "branch", "destroyed for a new total of ", new_count, " branches.")
     else:
         print("   No branches created or destroyed for a total of ", new_count, " branches.")
 
