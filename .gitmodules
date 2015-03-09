@@ -1,0 +1,6 @@
+[submodule "vecrec"]
+	path = libs/vecrec
+	url = https://github.com/kxgames/vecrec.git
+[submodule "libs/glooey"]
+	path = libs/glooey
+	url = https://github.com/kxgames/glooey.git
