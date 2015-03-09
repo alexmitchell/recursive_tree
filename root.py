@@ -7,6 +7,24 @@ from vecrec import Vector
 from math import pi
 from branch import Branch
         
+def print_instructions():
+    def print_key_pair(increase_key, decrease_key, value):
+        print(increase_key, ": Increase ", value, ".", sep="")
+        print(decrease_key, ": Decrease ", value, ".", sep="")
+
+    print()
+    print("Keys:")
+    print("I: Print the instructions.")
+    print_key_pair("Up Arrow", "Down Arrow", "turn angle")
+    print_key_pair("Right Arrow", "Left Arrow", "split angle")
+    print_key_pair("A", "S", "attenuation")
+    print_key_pair("Q", "W", "branch length")
+    print_key_pair("Z", "X", "maximum tree depth")
+    print("Backspace: Generate a new tree.")
+    print("Escape: Close the program.")
+    print()
+
+
 window = pyglet.window.Window()
 
 # Default variable values
@@ -53,6 +71,8 @@ branch_vector_step = branch_vector/10
 
 @window.event
 def on_key_press(symbol, modifier):
+    if symbol == key.I:
+        print_instructions()
     handle_turn_change(symbol)
     handle_split_change(symbol)
     handle_attenuation_change(symbol)
@@ -146,4 +166,6 @@ def handle_depth_change(symbol):
     else:
         print("   No branches created or destroyed for a total of ", new_count, " branches.")
 
+
+print_instructions()
 pyglet.app.run()
